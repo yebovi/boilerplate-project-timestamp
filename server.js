@@ -23,6 +23,36 @@ app.get("/", function (req, res) {
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
+app.get("/api/timestamp/:date",function(req,res){
+ var givenDate=req.params.date;
+var parsedDate= parseDate(givenDate);
+  if(parsedDate){
+    var unixTime= parsedDate.getTime();
+    res.send({'unix':unixTime,'utc':parsedDate.toUTCString()})
+  }
+  else{res.send({'unix':null,'utc':"Invalid Date"})}
+  res.end();
+})
+
+app.get("/api/timestamp/",function(req,res){
+  var utcDate=new Date();
+res.json({unix:utcDate.getTime(),utc:utcDate.toUTCString()})
+})
+
+function parseDate(dateStr){
+  if(!isNaN(dateStr)){
+  return new Date(parseInt(dateStr)) 
+   }
+else{
+var millis=Date.parse(dateStr);
+  if(isNaN(millis)){
+     return false}
+  else{
+  return new Date(millis)
+  }
+}  
+  
+}
 
 
 
